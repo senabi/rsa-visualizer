@@ -1,21 +1,105 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { PemFileValidator, pemFileValidator } from "../shared/pem";
 import { trpc } from "../utils/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
+import { useDropzone } from "react-dropzone";
+import { useCallback, useEffect } from "react";
+
+type FileInputType = {
+  name: keyof PemFileValidator;
+  label: string;
+  accept: string;
+};
+const FileInput: React.FC<FileInputType> = (props) => {
+  const { name, label = name } = props;
+  const { register, unregister, setValue, watch } = useFormContext();
+  const files = watch(name);
+  console.log(files);
+  const onDrop = useCallback(
+    (droppedFiles: File[]) => {
+      console.log("\n\n\n\n", droppedFiles);
+      // register("key").onChange();
+      setValue(name, droppedFiles[0], { shouldValidate: true });
+    },
+    [setValue, name]
+  );
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+  });
+  useEffect(() => {
+    register(name);
+    return () => {
+      unregister(name);
+    };
+  }, [register, unregister, name]);
+  return (
+    <>
+      <label className=" " htmlFor={name}>
+        {label}
+      </label>
+      <div
+        {...getRootProps()}
+        // type="file"
+        role="button"
+        aria-label="File Upload"
+        id={name}
+      >
+        <input {...props} {...getInputProps()} />
+        <div
+          style={{ width: "500px", border: "black solid 2px" }}
+          className={" " + (isDragActive ? " " : " ")}
+        >
+          <p className=" ">Drop the files here ...</p>
+
+          {/* {!!files?.length && (
+            <div className=" ">
+              {files.map((file) => {
+                return (
+                  <div key={file.name}>
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      style={{
+                        height: "200px",
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )} */}
+        </div>
+      </div>
+    </>
+  );
+};
 
 const LoadRSAKeyForm: React.FC = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PemFileValidator>({
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<PemFileValidator>({
+  const methods = useForm<PemFileValidator>({
     resolver: zodResolver(pemFileValidator),
   });
+  // const ctx = useFormContext();
+  console.log(methods.formState.errors["key"]);
+  const onDrop = () => {
+    console.log("onDrop");
+  };
+  // const accept = () => {
+  //   console.log("accept");
+  // };
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  //   onDrop,
+  //   accept: ".pem",
+  // });V
 
   const rsaMutation = trpc.rsa.addKey.useMutation({
     onSuccess: (data) => {
@@ -31,10 +115,30 @@ const LoadRSAKeyForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input type="file" accept=".pem" {...register("key")} />
-      <button type="submit">Load key</button>
-    </form>
+    <FormProvider {...methods}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className="flex flex-col"
+        // onDragEnter={(e) => {
+        //   console.log("onDragEnter");
+        // }}
+        // onDragLeave={(e) => {
+        //   console.log("onDragLeave");
+        // }}
+        // onDrop={(e) => {
+        //   console.log("onDrop");
+        // }}
+      >
+        {/* <input
+          type="file"
+          accept=".pem"
+          className="h-[50vh] w-[50vw]"
+          {...register("key")}
+        /> */}
+        <FileInput accept=".pem" name="key" label="File Upload" />
+        <button type="submit">Load key</button>
+      </form>
+    </FormProvider>
   );
 };
 

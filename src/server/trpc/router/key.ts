@@ -15,9 +15,7 @@ export const pemKeysRouter = router({
     if (key === null) {
       throw new Error("Invalid key format");
     }
-    // const a = key.export({ format: "jwk" });
     const jwk = key.export({ format: "jwk" });
-    console.log("\n\n\n\n\n\n\n", jwk);
     if (key.asymmetricKeyType !== "rsa") {
       throw new Error("Not a RSA key");
     }

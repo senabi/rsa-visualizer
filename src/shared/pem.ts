@@ -4,8 +4,8 @@ export const pemFileValidator = z.object({
   key:
     typeof window === "undefined"
       ? z.string()
-      : z.instanceof(FileList).transform(async (fileList, ctx) => {
-          const f = fileList.item(0);
+      : z.instanceof(File).transform(async (f, ctx) => {
+          // const f = fileList.item(0);
           if (f === null) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
