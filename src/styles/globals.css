@@ -683,6 +683,23 @@
   --colors-shadowLight: hsl(206 22% 7% / 35%);
   --colors-shadowDark: hsl(206 22% 7% / 20%);
   ---transparent: #16161800;
+  scrollbar-width: thin;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--colors-loContrast);
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--colors-slateA4);
+  border-radius: 10px;
+  border: 3px solid var(--colors-slateA4);
 }
 
 body {

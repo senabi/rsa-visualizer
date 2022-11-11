@@ -9,51 +9,98 @@ const KeyData: React.FC<{
 }> = (props) => {
   console.log(props.data);
   return (
-    // <div className="ml-auto mr-auto">
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex h-screen w-screen items-center justify-center">
       <Tabs.Root
-        className="rounded-lg bg-[var(--colors-loContrast)] p-4"
+        className="flex h-1/2 w-1/2 flex-col rounded-lg bg-[var(--colors-loContrast)] shadow-2xl"
         defaultValue="tab1"
       >
         <Tabs.List
-          className="flex justify-evenly gap-2 pb-2"
+          className="flex select-none justify-evenly gap-2 border-b-2 border-[var(--colors-slate4)] p-1 text-lg"
           aria-label="Manage key"
         >
-          <Tabs.Trigger className="" value="tab1">
+          <Tabs.Trigger
+            className="w-full rounded hover:bg-[var(--colors-slate3)] active:bg-[var(--colors-slate3)]"
+            value="tab1"
+          >
             Key
           </Tabs.Trigger>
-          <Tabs.Trigger className="" value="tab2">
+          <Tabs.Trigger
+            className="w-full rounded hover:bg-[var(--colors-slate3)] active:bg-[var(--colors-slate3)]"
+            value="tab2"
+          >
             Public Values
           </Tabs.Trigger>
           {props.data.pKeyValues ? (
-            <Tabs.Trigger className="" value="tab3">
+            <Tabs.Trigger
+              className="w-full rounded hover:bg-[var(--colors-slate3)] active:bg-[var(--colors-slate3)]"
+              value="tab3"
+            >
               Private Values
             </Tabs.Trigger>
           ) : null}
         </Tabs.List>
-        <Tabs.Content value="tab1">
-          <div className="h-80 overflow-x-hidden whitespace-pre-wrap">
-            {props.data.raw}
+        <Tabs.Content
+          value="tab1"
+          className="overflow-x-auto overflow-y-hidden p-4 hover:overflow-y-auto inactive:hidden"
+        >
+          <div className="whitespace-pre-wrap">{props.data.raw}</div>
+        </Tabs.Content>
+        <Tabs.Content
+          className="flex flex-col gap-4 p-5 inactive:hidden"
+          value="tab2"
+        >
+          <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+            <div className="font-semibold">Modulus</div>
+            <div className="pt-1">{props.data.modulusLength}</div>
+          </div>
+          <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+            <div className="font-semibold">Public Exponent</div>
+            <div className="pt-1">{props.data.publicExponent.toString()}</div>
+          </div>
+          <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+            <div className="font-semibold">Cryptographic algorithm</div>
+            <div className="pt-1">{props.data.asymmetricKeyType}</div>
+          </div>
+          <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+            <div className="font-semibold">Type</div>
+            <div className="pt-1">{props.data.type}</div>
           </div>
         </Tabs.Content>
-        <Tabs.Content className="flex flex-col gap-2" value="tab2">
-          <div>Modulus {props.data.modulusLength}</div>
-          <div>Public Exponent {props.data.publicExponent.toString()}</div>
-          <div>Cryptographic algorithm {props.data.asymmetricKeyType}</div>
-          <div>Type {props.data.type}</div>
-        </Tabs.Content>
         {props.data.pKeyValues !== null && (
-          <Tabs.Content className="flex flex-col gap-2" value="tab3">
-            <div>Private Exponent {props.data.pKeyValues.privateExponent}</div>
-            <div>
-              First Prime Factor {props.data.pKeyValues.firstPrimeFactor}
+          <Tabs.Content
+            className="flex flex-col gap-4 overflow-hidden break-words bg-scroll p-5 hover:overflow-y-auto hover:pr-[15px] inactive:hidden"
+            value="tab3"
+          >
+            <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+              <div className="font-semibold">Private Exponent</div>
+              <div className="pt-1">
+                {props.data.pKeyValues.privateExponent}
+              </div>
             </div>
-            <div>
-              Second Prime Factor {props.data.pKeyValues.secondPrimeFactor}
+            <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+              <div className="font-semibold">First Prime Factor</div>
+              <div className="pt-1">
+                {props.data.pKeyValues.firstPrimeFactor}
+              </div>
             </div>
-            <div>First Exponent {props.data.pKeyValues.firstExponent}</div>
-            <div>Second Exponent {props.data.pKeyValues.secondExponent}</div>
-            <div>Coefficient {props.data.pKeyValues.coefficient}</div>
+            <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+              <div className="font-semibold">Second Prime Factor</div>
+              <div className="pt-1">
+                {props.data.pKeyValues.secondPrimeFactor}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+              <div className="font-semibold">First Exponent</div>
+              <div className="pt-1">{props.data.pKeyValues.firstExponent}</div>
+            </div>
+            <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+              <div className="font-semibold">Second Exponent</div>
+              <div className="pt-1">{props.data.pKeyValues.secondExponent}</div>
+            </div>
+            <div className="flex flex-col gap-1 rounded-lg bg-[var(--colors-slateA3)] p-3 text-[var(--colors-slateA12)]">
+              <div className="font-semibold">Coefficient</div>
+              <div className="pt-1">{props.data.pKeyValues.coefficient}</div>
+            </div>
           </Tabs.Content>
         )}
       </Tabs.Root>
